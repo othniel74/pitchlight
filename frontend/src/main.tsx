@@ -5,6 +5,7 @@ import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Activity,
+  ArrowLeft,
   BarChart3,
   CloudLightning,
   ScanEye,
@@ -497,8 +498,11 @@ function App() {
             <span>{page.label}</span>
           </div>
           <div className="topbar-right">
-            <button className="button secondary tour-button" onClick={() => setTourOpen(true)}>
-              <Sparkles size={14} /> 60-second tour
+            <a className="button secondary home-button" href="/" title="Back to the Pitchlight home page" aria-label="Home">
+              <ArrowLeft size={14} /> <span className="topbar-label">Home</span>
+            </a>
+            <button className="button secondary tour-button" onClick={() => setTourOpen(true)} aria-label="60-second tour">
+              <Sparkles size={14} /> <span className="topbar-label">60-second tour</span>
             </button>
             <span className="synthetic-label">Synthetic data</span>
             {readOnlyDemo ? (
@@ -508,10 +512,11 @@ function App() {
                 <button
                   className="workspace-exit"
                   onClick={exitWorkspace}
+                  aria-label="Sign out & exit"
                   title="Sign out of the local session and return to the landing page"
                 >
                   <LogOut size={14} />
-                  <span>Sign out & exit</span>
+                  <span className="topbar-label">Sign out & exit</span>
                 </button>
                 {accessError&&<span role="alert">{accessError}</span>}
                 <button className="button secondary" onClick={()=>setReviewWindow({minute:frame.minute,seed:frame.context?.seed??20261020,accountOnly:true})}>Account & access</button>

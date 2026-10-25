@@ -71,7 +71,8 @@
   align-items: center;
   gap: 4px;
 }
-.tour-button {
+.tour-button,
+.home-button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -81,4 +82,7 @@
     right: 16px;
     bottom: 16px;
   }
+}
+.home-button {
+  text-decoration: none;
 }

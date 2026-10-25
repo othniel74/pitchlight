@@ -220,3 +220,24 @@ test("who it helps: each role shows its pains and gains", async ({ page }) => {
   await expect(page).toHaveURL(/#who-it-helps/);
   expect(errors).toEqual([]);
 });
+
+test("the workspace has a clear way back to the home page", async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.goto("/app?view=analysis");
+  await page.getByRole("link", { name: "Home", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("region", { name: "Who it helps" })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("no workspace page scrolls sideways on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  // As on the hosted demo: /ready reports demo mode, so only the demo's top-bar buttons show.
+  await page.route("**/ready", (r) => r.fulfill({ json: { status: "ready", mode: "demo", checks: {} } }));
+  for (const view of ["", "?view=analysis", "?view=studio", "?view=video", "?view=live", "?view=proof"]) {
+    await page.goto(`/app${view}`);
+    await expect(page.getByRole("link", { name: "Home", exact: true })).toBeVisible({ timeout: 30_000 });
+    await page.waitForTimeout(1500);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth), `/app${view}`).toBeLessThanOrEqual(360);
+  }
+});

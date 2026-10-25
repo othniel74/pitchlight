@@ -3391,3 +3391,40 @@ pre {
   color: #aab3bf;
   font-size: 13px;
 }
+@media (max-width: 740px) {
+  /* The match picker takes its own row, so the page actions never push past the screen. */
+  .page-actions {
+    flex-wrap: wrap;
+  }
+  .match-picker {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .match-picker select {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+  .panel-kicker {
+    white-space: normal;
+    text-align: right;
+  }
+}
+@media (max-width: 740px) {
+  /* Top bar buttons keep their icons and accessible names; the words return on wider screens. */
+  .topbar-right {
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+  .topbar-right .topbar-label {
+    display: none;
+  }
+  .topbar-right .home-button .topbar-label {
+    display: inline;
+  }
+  .topbar-right .button {
+    padding: 9px 10px;
+  }
+}
