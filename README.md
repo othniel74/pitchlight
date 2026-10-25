@@ -24,6 +24,7 @@
   <a href="#how-to-use-it">How to use it</a> ·
   <a href="docs/EVALUATION.md">Evaluation results</a> ·
   <a href="docs/SUBMISSION.md">Submission</a> ·
+  <a href="#roadmap">Roadmap</a> ·
   <a href="docs/README.md">Documentation</a>
 </p>
 
@@ -305,9 +306,41 @@ For the template/single-agent/workflow comparison, latency and cost methodology,
 | Backend | `cd backend && python -m pytest -q` | 332 passed, 10 skipped in the local agent-SDK run; the core-only suite (239) also runs in CI |
 | Vision | `.venv-vision/Scripts/python -m pytest tests/test_vision.py` | 7 passed: geometry, calibration from lines, teams, events, validation |
 | Real graph databases | [graph-db-tests.yaml](backend/graph-db-tests.yaml) in ACR Tasks | Memgraph and Neo4j parity with NetworkX |
-| Browser | `cd frontend && npx playwright test` (also against the live URL) | 12 passed |
+| Browser | `cd frontend && npx playwright test` (also against the live URL) | 14 passed, including blocked and silent WebSocket connections |
 | Foundry release evaluation | `backend/evaluation/foundry_eval.py` | groundedness 4.71/5, 0 unsupported numbers ([report](foundry-eval-report.json)) |
 | Vision vs ground truth | `python -m vision.run` | [vision-report.json](vision-report.json) |
+
+## Roadmap
+
+What comes next, in order. None of this is in the submitted product yet; everything below keeps the same rule: every published statement is checked against the match events, and descriptions never claim a cause.
+
+### Next: deeper match intelligence
+
+| Item | What it adds | For whom |
+| --- | --- | --- |
+| Graph tool for the agents | A whitelisted, parameterised graph-query tool over MCP (paths, neighbours, windows, zones; no free-form queries). The researcher and Ask agents can explore new structural questions, and every result still carries event IDs the fact checker verifies | Viewers, developers |
+| Audit-trail graph | Published narratives, recaps and overlays as graph nodes, linked to their statements, the fact checker's verdicts, claims and events. "Why was this published?" opens the chain, and a correction lists every affected text | Broadcasters, editors |
+| Momentum detector v2 | Today's territorial-shift interpretation is always sent for review (precision 0.52 against a 0.8 bar). v2 needs a shift to persist across windows and be confirmed by an independent signal (role or zone changes from **How the team plays**); it replaces v1 only if it beats it on the same held-out matches | Analysts |
+| How the team plays in every language | Its headlines are English today; they move to the same 7-language templates as moments and recaps | Every audience |
+| Duels won and lost | The synthetic feed records only successful tackles; adding failed challenges gives true duel win rates and matchups | Coaches |
+| Live data on blocked networks | The match replay already falls back to plain requests when WebSockets are blocked; the Live data stream will do the same | Viewers on corporate networks |
+
+### Then: real data and real users
+
+| Item | What it adds |
+| --- | --- |
+| Live provider feed | The StatsBomb and Sportmonks adapters already pass offline checks on 2,669 real matches; next is a licensed live feed through the same Event Hubs path |
+| Pilots | 4–6 matches with a club media team or broadcaster, with success criteria agreed up front: time saved, accuracy, languages |
+| Coach view | Evidence-backed suggestions, clearly labelled as suggestions, beside the facts they rest on; the decision stays with the coach |
+
+### Later: from a match to a season
+
+| Item | What it adds |
+| --- | --- |
+| Memgraph as the live store | Incremental writes as each event arrives, every match projected, time-scoped queries in the database, and MAGE algorithms kept in parity with NetworkX by the existing test suite |
+| Season history | Matches, players and opponents linked across games: form over time, opponent tendencies, scouting |
+| Production controls | Entra ID with roles, tenant isolation, PostgreSQL, Event Hubs checkpointing, delivery acknowledgements, Key Vault and WAF, Foundry evaluations as a CI release gate, SLOs and content safety: see [PATH_TO_PRODUCTION.md](docs/PATH_TO_PRODUCTION.md) |
+| Vision on real broadcast video | GPU inference, a detector fine-tuned on broadcast frames, replay and shot detection, jersey numbers; low-confidence events held for review ([VISION.md](docs/VISION.md)) |
 
 ## Documentation
 
