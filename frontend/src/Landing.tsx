@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { LANGUAGES, directionOf, type LanguageCode } from "./languages";
+import { ValueSection } from "./ValueSection";
 import {
   Activity,
   ArrowDown,
@@ -184,6 +185,9 @@ export default function Landing() {
           </strong>
         </a>
         <nav aria-label="Main navigation" className={menu ? "open" : ""}>
+          <a href="#who-it-helps" onClick={() => setMenu(false)}>
+            Who it helps
+          </a>
           <a href="#intelligence" onClick={() => setMenu(false)}>
             The intelligence
           </a>
@@ -297,6 +301,7 @@ export default function Landing() {
             <Languages size={17} /> Different audiences. Same facts.
           </span>
         </div>
+        <ValueSection />
         <section className="lp-intelligence lp-section" id="intelligence">
           <div className="lp-section-top">
             <div>

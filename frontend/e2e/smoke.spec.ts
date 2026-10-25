@@ -171,7 +171,7 @@ test("the one idea is easy to find: tour, fact checker and proof", async ({ page
   const errors = watchErrors(page);
   await page.goto("/");
   await expect(page.getByText("Every statement is verified before anyone sees it.")).toBeVisible();
-  await page.getByRole("link", { name: "See it in 60 seconds" }).click();
+  await page.getByRole("link", { name: "See it in 60 seconds" }).first().click();  // the hero's link
   const tour = page.getByRole("dialog", { name: "Guided tour" });
   await expect(tour).toContainText("Start with a false claim");
   await expect(page.locator("section.tour-focus")).toHaveAttribute("aria-label", "Try to fool the fact checker");
@@ -202,5 +202,21 @@ test("pick another synthetic match: the workspace follows it", async ({ page }) 
   // The video and the Event Hubs feed were made from the featured match, and say so.
   await page.goto("/app?view=video&match=20261036");
   await expect(page.getByRole("note")).toContainText("Video AI runs on the featured match");
+  expect(errors).toEqual([]);
+});
+
+test("who it helps: each role shows its pains and gains", async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.goto("/");
+  const section = page.getByRole("region", { name: "Who it helps" });
+  await expect(section).toContainText("Every statement is checked against the match before anyone sees it.");
+  await section.getByRole("tab", { name: "Clubs" }).click();
+  await expect(section.getByRole("tab", { name: "Clubs" })).toHaveAttribute("aria-selected", "true");
+  await expect(section).toContainText("At half-time, analysts scrub through video");
+  await section.getByRole("tab", { name: "Clubs" }).press("ArrowRight");
+  await expect(section.getByRole("tab", { name: "Developers" })).toBeFocused();
+  await expect(section).toContainText("Fifteen verified, read-only match tools");
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Who it helps" }).click();
+  await expect(page).toHaveURL(/#who-it-helps/);
   expect(errors).toEqual([]);
 });

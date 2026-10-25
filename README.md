@@ -20,6 +20,7 @@
 <p align="center">
   <a href="https://pitchlight.mangograss-8c9a0131.uksouth.azurecontainerapps.io">Live demo</a> ·
   <a href="https://youtu.be/85Qid7SmMdw">Video (1:49)</a> ·
+  <a href="#who-it-helps">Who it helps</a> ·
   <a href="#how-to-use-it">How to use it</a> ·
   <a href="docs/EVALUATION.md">Evaluation results</a> ·
   <a href="docs/SUBMISSION.md">Submission</a> ·
@@ -66,6 +67,42 @@ All clubs (Calderbrook FC, Merridge Athletic), players and events are fictional 
     <td><sub>The match workspace: verified moments, Ask the match, and AI recaps.</sub></td>
   </tr>
 </table>
+
+## Who it helps
+
+Language models write well but invent facts, so nobody can put them on screen. Pitchlight checks every statement first. Here is what that changes for each kind of user.
+
+**Broadcasters**
+
+| Today | With Pitchlight | Proof |
+| --- | --- | --- |
+| AI writes fast, but invents scorers and results. One wrong line on air costs trust. | Every statement is checked against the match before anyone sees it. | 0 false statements in 264 live checks |
+| Every AI-written line still needs a person to check it. | Editors review the evidence behind each claim instead of rewriting copy. | Every claim links to its source events |
+| Each new language means a new team and a new cost. | One set of verified facts, published in seven languages. | Including Arabic, right to left |
+
+**Fan apps**
+
+| Today | With Pitchlight | Proof |
+| --- | --- | --- |
+| Every fan gets the same generic match report. | A personal story: your club, your player, the metric you care about. | Fan, analyst or broadcast mode |
+| Fans' questions go unanswered, or a chatbot guesses. | Ask the match, and the answer comes from verified data. | A Foundry agent calling Pitchlight's own tools |
+| Content arrives after the moment has passed. | Moments and recaps update while the match is being played. | Streamed live through Azure Event Hubs |
+
+**Clubs**
+
+| Today | With Pitchlight | Proof |
+| --- | --- | --- |
+| At half-time, analysts scrub through video to find what is going wrong. | Pressing, defensive shape and passing changes, in seconds. | Last 15 minutes compared with the 15 before |
+| Did the substitution work, or was it just a lucky spell? | The ten minutes before and after every change, ranked against the match's normal swings. | Evidence for the next decision, never a claimed cause |
+| Match reports for a global fanbase take hours. | Verified recaps in seven languages, minutes after the final whistle. | 62 of 63 AI recaps published, none wrong |
+
+**Developers**
+
+| Today | With Pitchlight | Proof |
+| --- | --- | --- |
+| Your own AI agents make up sports facts. | Fifteen verified, read-only match tools any agent can call. | MCP server and HTTP API |
+| Every data provider uses a different format. | One validated data layer for events from any provider. | 2,669 real matches checked, every score matched |
+| It is hard to prove AI output is safe. | Measured results and an audit trail for every published claim. | Microsoft Foundry groundedness 4.71 / 5 |
 
 ## Evaluation results
 
