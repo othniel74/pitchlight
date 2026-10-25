@@ -1,6 +1,7 @@
 from __future__ import annotations
 import asyncio
 import os
+from functools import lru_cache
 import math
 import time
 import logging
@@ -837,6 +838,22 @@ def graph_roles(team: str | None = Query(None, pattern='^(home|away)$'), start: 
             stored = repo.kg_pass_lanes(context['match_id'], t, start, end)
             teams[t]['database_agrees'] = sum(r['weight'] for r in stored) == teams[t]['completed_passes']
     return {'teams': teams, 'database': repo.backend if repo else None, 'context': context}
+
+
+@app.get('/api/graph/structure')
+def graph_structure(team: str = Query('away', pattern='^(home|away)$'), minute: int = Query(90, ge=1, le=90),
+                    seed: int = SEED):
+    """Where a team attacks, how its roles changed, who its passing relies on, who it wins the ball
+    from, and the moves it repeats; time-scoped, with evidence event IDs."""
+    g, events, context = _knowledge(seed, minute)
+    return {'context': context, **_structure_cached(context['match_id'], context['state_version'], seed, team, minute)}
+
+
+@lru_cache(maxsize=128)
+def _structure_cached(match_id: str, version: int, seed: int, team: str, minute: int) -> dict:
+    from .structure import structure
+    g, events, _ = _knowledge(seed, minute)
+    return structure(g, events, team, minute)
 
 
 @app.get('/api/graph/xg-chain')

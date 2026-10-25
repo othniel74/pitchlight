@@ -241,3 +241,18 @@ test("no workspace page scrolls sideways on a phone", async ({ page }) => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth), `/app${view}`).toBeLessThanOrEqual(360);
   }
 });
+
+test("how the team plays: five plain views with evidence", async ({ page }) => {
+  const errors = watchErrors(page);
+  await page.goto("/app?view=analysis");
+  const panel = page.getByRole("region", { name: "How the team plays" });
+  await expect(panel.getByTestId("structure-headline")).toContainText("final-third passes", { timeout: 60_000 });
+  for (const [tab, words] of [["Roles over time", /hub|roles/], ["Who they rely on", /passes involved|spread out|network/],
+                              ["Winning the ball", /won the ball/], ["Repeated moves", /move/]] as const) {
+    await panel.getByRole("tab", { name: tab }).click();
+    await expect(panel.getByTestId("structure-headline")).toContainText(words);
+  }
+  await panel.getByRole("button", { name: "Calderbrook" }).click();
+  await expect(panel.getByRole("heading", { name: "How Calderbrook play" })).toBeVisible();
+  expect(errors).toEqual([]);
+});

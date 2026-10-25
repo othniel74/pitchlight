@@ -47,6 +47,7 @@ import { eventLabel, empty, initial, type Insight, type Overlay, type Frame, typ
 import { Crest, PanelTitle, Comparison } from "./MatchWidgets";
 import { IS_FEATURED, MATCH, withMatch } from "./match";
 import { MatchPicker } from "./MatchPicker";
+import { StructurePanel } from "./StructurePanel";
 import { BroadcastCanvas, PreviewWindow, type PreviewPayload } from "./Broadcast";
 
 // Real-data research views are local-only; the product itself uses synthetic data, and the
@@ -888,6 +889,7 @@ function App() {
                 {section === "analysis" && (<>
                 <div className="section-stack">
                   {squads && <GraphExplorer minute={frame.minute} stateVersion={frame.context?.state_version} clubs={squads.clubs} />}
+                  {squads && <StructurePanel minute={frame.minute} clubs={squads.clubs} />}
                   {squads && <TacticsPanel minute={frame.minute} language={profile.language} clubs={squads.clubs} />}
                 </div>
                 <div className="dashboard-grid">

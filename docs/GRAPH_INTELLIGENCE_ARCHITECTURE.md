@@ -66,7 +66,21 @@ Run `db4` on 20 October 2026 passed 56 tests with 0 skipped. That covers 9 datab
 
 ## In the deployed demo
 
-Memgraph runs as a sidecar container in the `matchmind-demo` Container App, with 0.5 vCPU, 1 GiB and a 768 MiB memory limit. The app reaches it at `bolt://localhost:7687`, and it is not exposed outside the app. It holds a replayable copy, so a restart only re-projects. Graph rebuild over the API stays disabled in demo mode.
+Memgraph runs as a sidecar container in the `pitchlight` Container App (each replica has its own copy), with 0.5 vCPU, 1 GiB and a 768 MiB memory limit. The app reaches it at `bolt://localhost:7687`, and it is not exposed outside the app. It holds a replayable copy, so a restart only re-projects. Graph rebuild over the API stays disabled in demo mode.
+
+## How the team plays (25 October 2026)
+
+`app/structure.py`, served at `GET /api/graph/structure?team=&minute=&seed=` and shown in Analysis as five views. Each is time-scoped, cites its events, and describes without claiming a cause.
+
+| View | Computation |
+| --- | --- |
+| Where they attack | Completed passes into or within the final third by channel, in the attacking team's view (the home side's left is high y, the away side's low y); last 15 minutes against everything before |
+| Roles over time | Hub and key link of each rolling 15-minute spell every 5 minutes; a change counts only when the new holder keeps the role for two spells; the team's own substitution or either red card in the 10 minutes before is given as timing context |
+| Who they rely on | Weighted global efficiency of the pass network (a lane used n times has length 1/n) over the other players, with and without each player; share of passes involving them; passing units by Louvain community detection (fixed seed) |
+| Winning the ball | Each tackle or recovery straight after an opponent's action, paired with that opponent; where it happened |
+| Repeated moves | Three-player chains (A to B, then B to C) inside one possession, repeated at least three times; one-twos named; how many of those possessions ended in a shot or goal |
+
+Results are cached per match, state version, team and minute. Tests: `tests/test_structure.py`.
 
 ## Limits
 
