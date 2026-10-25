@@ -263,49 +263,83 @@ function App() {
     let disposed = false,
       lastMinute = 0,
       lastVersion = 0,
+      failures = 0,
       socket: WebSocket | null = null;
     let retry: ReturnType<typeof setTimeout> | undefined;
+    let watchdog: ReturnType<typeof setTimeout> | undefined;
+    const tickMs = 1000 / replaySpeed;  // one match minute
+    // Some networks (corporate proxies, VPNs, security software) block WebSockets or drop them
+    // silently. A connection that never opens, or goes quiet, is closed and retried; after two
+    // failures the replay continues over ordinary requests, so it always plays.
+    const arm = (ms: number) => {
+      clearTimeout(watchdog);
+      watchdog = setTimeout(() => socket?.close(), ms);
+    };
+    const poll = async () => {
+      if (disposed || lastMinute >= 90) return;
+      try {
+        const r = await fetch(withMatch(`/api/state?minute=${lastMinute + 1}`));
+        if (r.ok && !disposed) {
+          setConnected(true);
+          apply(await r.json());
+        }
+      } catch {
+        if (!disposed) setConnected(false);
+      }
+      if (!disposed && lastMinute < 90) retry = setTimeout(poll, tickMs);
+    };
     const connect = () => {
       const scheme = location.protocol === "https:" ? "wss" : "ws";
+      let received = false;
       socket = new WebSocket(
         // The server's `speed` is seconds per match minute, so send the inverse.
         `${scheme}://${location.host}${withMatch(`/ws/match?speed=${1 / replaySpeed}&start_minute=${lastMinute + 1}`)}`,
       );
+      arm(6000);  // must open and deliver a minute within six seconds
       socket.onopen = () => {
         if (!disposed) setConnected(true);
       };
       socket.onmessage = (e) => {
         if (disposed) return;
-        const next: Frame = JSON.parse(e.data);
-        if (next.minute <= lastMinute) return;
-        if(lastVersion && next.context?.state_version !== lastVersion){setHistory([]);setQueue([]);setGraph(null);setSamples([]);setSelected("");setSelectedInsight("");}
-        lastVersion=next.context?.state_version??0;
-        lastMinute = next.minute;
-        setFrame(next);
-        setSamples((prev) => [
-          ...prev,
-          {
-            minute: next.minute,
-            home: next.statistics.home.advanced_events,
-            away: next.statistics.away.advanced_events,
-          },
-        ]);
-        setHistory((prev) => {
-          const items = new Map(prev.map((x) => [x.id, x]));
-          next.insights.forEach((x) => items.set(x.id, x));
-          return [...items.values()].slice(-30);
-        });
+        received = true;
+        failures = 0;
+        arm(tickMs + 8000);
+        apply(JSON.parse(e.data));
       };
       socket.onclose = () => {
+        clearTimeout(watchdog);
         if (disposed) return;
         setConnected(false);
-        if (lastMinute < 90) retry = setTimeout(connect, 1000);
+        if (lastMinute >= 90) return;
+        if (!received) failures += 1;
+        retry = failures >= 2 ? setTimeout(poll, 300) : setTimeout(connect, 1000);
       };
+    };
+    const apply = (next: Frame) => {
+      if (next.minute <= lastMinute) return;
+      if(lastVersion && next.context?.state_version !== lastVersion){setHistory([]);setQueue([]);setGraph(null);setSamples([]);setSelected("");setSelectedInsight("");}
+      lastVersion=next.context?.state_version??0;
+      lastMinute = next.minute;
+      setFrame(next);
+      setSamples((prev) => [
+        ...prev,
+        {
+          minute: next.minute,
+          home: next.statistics.home.advanced_events,
+          away: next.statistics.away.advanced_events,
+        },
+      ]);
+      setHistory((prev) => {
+        const items = new Map(prev.map((x) => [x.id, x]));
+        next.insights.forEach((x) => items.set(x.id, x));
+        return [...items.values()].slice(-30);
+      });
     };
     connect();
     return () => {
       disposed = true;
       clearTimeout(retry);
+      clearTimeout(watchdog);
       socket?.close();
     };
   }, [run]);

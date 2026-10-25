@@ -256,3 +256,32 @@ test("how the team plays: five plain views with evidence", async ({ page }) => {
   await expect(panel.getByRole("heading", { name: "How Calderbrook play" })).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test("the replay still plays when the network blocks WebSockets", async ({ page }) => {
+  test.setTimeout(120_000);
+  // Like a corporate proxy or security tool: every replay socket is refused.
+  await page.routeWebSocket(/\/ws\/match/, (ws) => ws.close());
+  await page.goto("/app?speed=5");
+  const scoreboard = page.getByRole("region", { name: "Match scoreboard" });
+  await expect(scoreboard).toContainText(/(0[5-9]|[1-8]\d):\d{2}/, { timeout: 40_000 });  // minutes keep advancing
+  await expect(page.locator(".live-pill")).toContainText("Simulation live");
+});
+
+test("the replay recovers when the connection goes quiet", async ({ page }) => {
+  test.setTimeout(120_000);
+  // Sockets opened at the start deliver two minutes and then go silent without closing, as some
+  // proxies do. (Development mode mounts the page twice, so every early socket is silenced.)
+  const t0 = Date.now();
+  const opened: number[] = [];
+  await page.routeWebSocket(/\/ws\/match/, (ws) => {
+    opened.push(Date.now() - t0);
+    const server = ws.connectToServer();
+    if (Date.now() - t0 > 2000) return;
+    let frames = 0;
+    server.onMessage((m) => { if (++frames <= 2) ws.send(m); });
+  });
+  await page.goto("/app?speed=5");
+  const scoreboard = page.getByRole("region", { name: "Match scoreboard" });
+  await expect(scoreboard).toContainText(/(0[5-9]|[1-8]\d):\d{2}/, { timeout: 40_000 });  // minutes advance again
+  expect(opened.some((t) => t > 2000)).toBe(true);  // after the freeze was detected, a new connection
+});
