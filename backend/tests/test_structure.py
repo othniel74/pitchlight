@@ -111,3 +111,15 @@ def test_every_cited_event_has_a_readable_entry(match):
     assert cited <= set(s['events'])
     for i, entry in s['events'].items():
         assert entry['clock'] == by_id[i].minute * 60 + by_id[i].second and entry['type'] == by_id[i].event_type
+
+
+@pytest.mark.parametrize('seed', [20261020, 20261036, 20261068])
+def test_every_role_change_names_its_own_window(seed):
+    g, events, _ = match_graph(seed, 90)
+    for team in ('home', 'away'):
+        r = role_timeline(g, events, team, 90)
+        for c in r['changes']:
+            window = f"({c['start']}–{c['minute']}′)."
+            assert window in c['text'], c['text']
+            assert c['text'].split(window)[1] in ('',) or c['text'].split(window)[1].startswith(' This followed')
+        assert '.–' not in r['headline']

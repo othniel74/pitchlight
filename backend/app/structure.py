@@ -135,7 +135,7 @@ def role_timeline(g: nx.MultiDiGraph, events: list[Event], team: str, minute: in
                 cur = spells[i]
                 net = passing_graph(g, team, cur['start'], cur['end'])
                 ids = [x for u, v, d in net.edges(data=True) if b in (u, v) for x in d['event_ids']]
-                changes.append({'minute': cur['end'], 'role': role, 'from': a, 'to': b,
+                changes.append({'minute': cur['end'], 'start': cur['start'], 'role': role, 'from': a, 'to': b,
                                 'text': f"{_name(b)} took over from {_name(a)} as {label} "
                                         f"({cur['start']}–{cur['end']}′).{_context(events, team, cur['end'])}",
                                 'event_ids': sorted(ids)[-30:]})
@@ -148,11 +148,10 @@ def role_timeline(g: nx.MultiDiGraph, events: list[Event], team: str, minute: in
             hub, key = (last, c) if last['role'] == 'hub' else (c, last)
             frm = (f"from {_name(hub['from'])}" if hub['from'] == key['from']
                    else f"from {_name(hub['from'])} and {_name(key['from'])}")
-            start = c['text'][c['text'].rindex('(') + 1:].split('–')[0]
             last.update({'role': 'both', 'from': [hub['from'], key['from']],
                          'event_ids': sorted(set(last['event_ids'] + c['event_ids']))[-30:],
                          'text': f"{_name(c['to'])} took over as both the hub and the key link, {frm} "
-                                 f"({start}–{c['minute']}′).{_context(events, team, c['minute'])}"})
+                                 f"({c['start']}–{c['minute']}′).{_context(events, team, c['minute'])}"})
         else:
             merged.append(c)
     changes = merged
