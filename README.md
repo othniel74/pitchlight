@@ -14,10 +14,13 @@
   <a href="https://github.com/othniel74/pitchlight/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/othniel74/pitchlight/ci.yml?branch=main&label=CI&style=flat-square"></a>
   <img alt="Microsoft Foundry" src="https://img.shields.io/badge/Microsoft%20Foundry-Agent%20Framework-0078d4?style=flat-square">
   <img alt="MCP" src="https://img.shields.io/badge/MCP-15%20tools-6b4fbb?style=flat-square">
-  <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-lightgrey?style=flat-square"></a>
+  <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-lightgrey?style=flat-square"></a>]
+  <a href="https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme">
+    <img alt="M8ven Score" src="https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa">
+  </a>
 </p>
 
-<p>[![M8ven Score](https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa)](https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme)</p>
+
 
 
 <p align="center">
