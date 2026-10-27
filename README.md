@@ -17,7 +17,7 @@
   <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-lightgrey?style=flat-square"></a>
 </p>
 
-<center>[![M8ven Score](https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa)](https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme)</center>
+<p>[![M8ven Score](https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa)](https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme)</p>
 
 
 <p align="center">
