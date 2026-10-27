@@ -15,6 +15,7 @@
   <img alt="Microsoft Foundry" src="https://img.shields.io/badge/Microsoft%20Foundry-Agent%20Framework-0078d4?style=flat-square">
   <img alt="MCP" src="https://img.shields.io/badge/MCP-15%20tools-6b4fbb?style=flat-square">
   <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-lightgrey?style=flat-square"></a>
+  [![M8ven Score](https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa)](https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme)
 </p>
 
 <p align="center">
@@ -350,4 +351,4 @@ Start with the [documentation index](docs/README.md). Key documents: [Evaluation
 
 Created by **Othniel Obasi**. MIT. See [LICENSE](LICENSE). The Microsoft Rocketbox player models are MIT-licensed and credited separately.
 
-[![M8ven Score](https://m8ven.ai/badge/mcp/othniel74-pitchlight-1ybblg?v=8d7a2b07c4a97cf0bd5c1c8c6a5cf6aa)](https://m8ven.ai/mcp/othniel74-pitchlight-1ybblg?s=readme)
+
